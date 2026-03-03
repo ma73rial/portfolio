@@ -5,9 +5,9 @@ import gsap from "gsap";
 
 const STATS = [
   { value: 5,   suffix: "",    label: "Projects shipped",            sub: "open source & in production" },
-  { value: 1,   suffix: "",    label: "Linux kernel contribution",   sub: "dlink-dwa131 h1 driver"      },
-  { value: 2,   suffix: "",    label: "FTC teams on my dashboard",   sub: "teams #10937 & #30548"       },
-  { value: 30,  suffix: "+",   label: "Built-in apps (Vira OS)",     sub: "full OS in the browser"      },
+  { value: 4,   suffix: "",    label: "Linux kernel contributions",   sub: "Incl. dlink-dwa131 h1 driver"      },
+  { value: 3,   suffix: "",    label: "FTC teams on my dashboard",   sub: "teams #10937 & #30548"       },
+  { value: 20,  suffix: "+",   label: "Built-in apps (Vira OS)",     sub: "full OS in the browser"      },
 ];
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
