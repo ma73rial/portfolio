@@ -2,200 +2,146 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  SiJavascript, SiTypescript, SiReact, SiNextdotjs, SiNodedotjs,
-  SiPython, SiC, SiLinux, SiSocketdotio, SiSqlite, SiOllama, SiTailwindcss,
-} from "react-icons/si";
+import Link from "next/link";
+import { STACK } from "@/data/stack";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STACK = [
-  { name: "JavaScript",   color: "#f7df1e", Icon: SiJavascript,  code: `const fibonacci = n =>
-  n <= 1 ? n : fibonacci(n - 1) + fibonacci(n - 2);
-
-const seq = Array.from({ length: 10 }, (_, i) => fibonacci(i));
-console.log(seq);
-// [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-
-export default fibonacci;` },
-  { name: "TypeScript",   color: "#3178c6", Icon: SiTypescript,  code: `interface Project {
-  id: string;
-  name: string;
-  deployed: boolean;
-  tags: string[];
-}
-
-function filterDeployed(projects: Project[]): Project[] {
-  return projects.filter(p => p.deployed);
-}` },
-  { name: "React",        color: "#61dafb", Icon: SiReact,       code: `function Counter({ initial = 0 }: { initial?: number }) {
-  const [count, setCount] = useState(initial);
-  return (
-    <button onClick={() => setCount(c => c + 1)}>
-      Clicked {count} {count === 1 ? "time" : "times"}
-    </button>
-  );
-}` },
-  { name: "Next.js",      color: "#ffffff", Icon: SiNextdotjs,   code: `export default async function Page({
-  params,
-}: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
-  return <article>{post.content}</article>;
-}
-
-export async function generateStaticParams() {
-  return getPosts().map(p => ({ slug: p.id }));
-}` },
-  { name: "Node.js",      color: "#68a063", Icon: SiNodedotjs,   code: `import http from "node:http";
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ path: req.url, ok: true }));
+// Precompute final spread positions — arc fan, center highest, edges droop down
+const SPREAD = STACK.map((_, i) => {
+  const t       = STACK.length > 1 ? i / (STACK.length - 1) : 0.5;
+  const theta   = (t - 0.5) * 56;                  // −28° → +28°
+  const rad     = (theta * Math.PI) / 180;
+  return {
+    x:       Math.sin(rad) * 700,                   // lateral displacement
+    y:       (1 - Math.cos(rad)) * 350,             // downward arc at edges (+y = down)
+    rotateZ: theta,
+  };
 });
 
-server.listen(3000, () => console.log("listening"));` },
-  { name: "Python",       color: "#3776ab", Icon: SiPython,      code: `def binary_search(arr: list, target: int) -> int:
-    lo, hi = 0, len(arr) - 1
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-    return -1` },
-  { name: "C",            color: "#f97316", Icon: SiC,           code: `#include <stdio.h>
-#include <stdlib.h>
-
-int *range(int n) {
-    int *arr = malloc(n * sizeof(int));
-    for (int i = 0; i < n; i++) arr[i] = i;
-    return arr;
-}
-
-int main(void) {
-    int *r = range(10);
-    free(r);
-    return 0;
-}` },
-  { name: "Linux Kernel", color: "#ffcc00", Icon: SiLinux,       code: `#include <linux/module.h>
-#include <linux/usb.h>
-
-static int driver_probe(struct usb_interface *intf,
-                        const struct usb_device_id *id) {
-    dev_info(&intf->dev, "DWA-131 attached\\n");
-    return 0;
-}
-
-module_usb_driver(dwa131_driver);
-MODULE_LICENSE("GPL");` },
-  { name: "WebSockets",   color: "#00d4ff", Icon: SiSocketdotio, code: `const wss = new WebSocketServer({ port: 8080 });
-
-wss.on("connection", (ws) => {
-  ws.on("message", (data) => {
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN)
-        client.send(data);
-    });
-  });
-});` },
-  { name: "SQLite",       color: "#4479a1", Icon: SiSqlite,      code: `SELECT p.id, p.title, COUNT(t.id) AS tags
-FROM posts p
-LEFT JOIN post_tags t ON p.id = t.post_id
-WHERE p.published = 1
-GROUP BY p.id
-ORDER BY p.created_at DESC
-LIMIT 10;` },
-  { name: "Local LLM",    color: "#a78bfa", Icon: SiOllama,      code: `import ollama
-
-response = ollama.generate(
-    model="gemma3",
-    prompt="Classify this waste item: empty yogurt cup",
-    options={"temperature": 0.1},
-)
-
-print(response["response"])
-# → yellow bin (Gelber Sack)` },
-  { name: "Tailwind CSS", color: "#38bdf8", Icon: SiTailwindcss, code: `<div className="flex min-h-screen flex-col bg-navy-950">
-  <nav className="sticky top-0 z-50 glass
-                  border-b border-white/5 px-6 py-4">
-    <span className="font-display font-black
-                     text-gradient-cyan">
-      Portfolio
-    </span>
-  </nav>
-</div>` },
-];
-
 const TIMELINE = [
-  { year: "2022", title: "First real program",          desc: "Started writing Python scripts to automate things in middle school. Never looked back." },
-  { year: "2023", title: "FTC Robotics",                desc: "Joined FIRST Tech Challenge teams #10937 and #30548 at Stuttgart High School. Immediately started building the team dashboard because 10 Google Tabs was not acceptable." },
-  { year: "2024", title: "Vira OS",                     desc: "Built a full Mac-inspired OS running in the browser — filesystem, UAC, terminal, IDE, browser, 30+ apps, and a custom Python interpreter. From scratch. As a freshman." },
-  { year: "2025", title: "Linux Kernel Driver",         desc: "Reverse-engineered the D-Link DWA-131 rev H1 USB WiFi chip, wrote a plug-and-play Linux kernel driver in C, and submitted it upstream." },
-  { year: "2025", title: "GelbIT",                      desc: "Built an AI recycling assistant for USAG Stuttgart military families — computer vision, agentic scraping, and real-time local rules. Deployed to beta users." },
+  { year: "2022", title: "First real program",  desc: "Started writing Python scripts to automate things in middle school. Never looked back." },
+  { year: "2023", title: "FTC Robotics",        desc: "Joined FIRST Tech Challenge teams #10937 and #30548 at Stuttgart High School. Immediately started building the team dashboard because 10 Google Tabs was not acceptable." },
+  { year: "2024", title: "Vira OS",             desc: "Built a full Mac-inspired OS running in the browser — filesystem, UAC, terminal, IDE, browser, 30+ apps, and a custom Python interpreter. From scratch. As a freshman." },
+  { year: "2025", title: "Linux Kernel Driver", desc: "Reverse-engineered the D-Link DWA-131 rev H1 USB WiFi chip, wrote a plug-and-play Linux kernel driver in C, and submitted it upstream." },
+  { year: "2025", title: "GelbIT",              desc: "Built an AI recycling assistant for USAG Stuttgart military families — computer vision, agentic scraping, and real-time local rules. Deployed to beta users." },
 ];
 
 export default function About() {
-  const sectionRef      = useRef<HTMLElement>(null);
-  const timelineRef     = useRef<HTMLDivElement>(null);
-  const stackRef        = useRef<HTMLDivElement>(null);
-  const stackInner      = useRef<HTMLDivElement>(null);
-  const cardRefs        = useRef<(HTMLDivElement | null)[]>([]);
-  const codeBackdropRef = useRef<HTMLPreElement>(null);
+  const sectionRef  = useRef<HTMLElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const stackRef    = useRef<HTMLDivElement>(null);
+  const cardRefs    = useRef<(HTMLDivElement | null)[]>([]);
+  const isDealtRef  = useRef(false);
+  const activeCardRef = useRef<number | null>(null);
+
+  // Restore all cards to their SPREAD resting positions
+  const restoreAll = () => {
+    if (activeCardRef.current === null) return;
+    activeCardRef.current = null;
+    const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+    cards.forEach((card, j) => {
+      if (!card) return;
+      gsap.to(card, { x: SPREAD[j].x, y: SPREAD[j].y, scale: 1, duration: 0.25, ease: "power2.out" });
+      card.style.zIndex = String(j + 1);
+    });
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Timeline animate-in
-      const timelineItems = timelineRef.current?.querySelectorAll(".timeline-item");
-      if (timelineItems) {
-        gsap.fromTo(timelineItems,
+      const items = timelineRef.current?.querySelectorAll(".timeline-item");
+      if (items) {
+        gsap.fromTo(items,
           { opacity: 0, x: -40 },
-          { opacity: 1, x: 0, duration: 0.6, stagger: 0.15,
-            scrollTrigger: { trigger: timelineRef.current, start: "top 75%", toggleActions: "play none none reverse" } }
+          {
+            opacity: 1, x: 0, duration: 0.6, stagger: 0.15,
+            scrollTrigger: {
+              trigger: timelineRef.current,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
+            },
+          }
         );
       }
 
-      // Stacking cards — GSAP pin + sequential slide-up
-      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-      if (cards.length && stackInner.current) {
-        gsap.set(cards.slice(1), { yPercent: 110 });
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: stackRef.current,
-            start: "top 30%",
-            end: `+=${(cards.length - 1) * 250}`,
-            pin: stackInner.current,
-            scrub: 0.8,
-            onUpdate(self) {
-              // Update full-section code backdrop to match the current card
-              const idx = Math.min(STACK.length - 1, Math.round(self.progress * (STACK.length - 1)));
-              if (codeBackdropRef.current) {
-                codeBackdropRef.current.textContent = STACK[idx].code;
-                codeBackdropRef.current.style.color  = STACK[idx].color;
-              }
-            },
+      // Desktop-only: deal + cascade flip when section enters view
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1024px)", () => {
+        const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+        if (!cards.length) return;
+
+        // Start stacked at center, back face up
+        gsap.set(cards, { x: 0, rotateZ: 0, rotateY: 0 });
+
+        ScrollTrigger.create({
+          trigger: stackRef.current,
+          start: "top 60%",
+          once: true,
+          onEnter: () => {
+            if (isDealtRef.current) return;
+            isDealtRef.current = true;
+
+            const tl = gsap.timeline();
+
+            // Phase 1: deal — each card slides to its arc position
+            tl.to(cards, {
+              x:       (i: number) => SPREAD[i].x,
+              y:       (i: number) => SPREAD[i].y,
+              rotateZ: (i: number) => SPREAD[i].rotateZ,
+              duration: 0.4,
+              ease:     "power3.out",
+              stagger:  0.035,
+            });
+
+            // Phase 2: cascade flip — rotateY 0→180 in a wave
+            // stagger of 0.05s means when card[0] is at 90°, card[1] is at ~72°, card[2] at ~54°, etc.
+            tl.to(cards, {
+              rotateY:  180,
+              duration: 0.5,
+              ease:     "power1.inOut",
+              stagger:  0.05,
+            }, "-=0.05");
           },
         });
-        cards.slice(1).forEach((card, i) => {
-          tl.to(card, { yPercent: 0, ease: "power2.out", duration: 1 }, i * 0.9);
+
+        // Restore all cards when user scrolls away
+        ScrollTrigger.create({
+          trigger: stackRef.current,
+          start:  "top bottom",
+          end:    "bottom top",
+          onLeave:     restoreAll,
+          onLeaveBack: restoreAll,
         });
-      }
+      });
     }, sectionRef);
+
     return () => ctx.revert();
   }, []);
 
+  const handleCardHover = (i: number) => {
+    if (!isDealtRef.current) return;
+    activeCardRef.current = i;
+    const PUSH = 45;
+    cardRefs.current.forEach((card, j) => {
+      if (!card) return;
+      const offsetX = j < i ? -PUSH : j > i ? PUSH : 0;
+      gsap.to(card, {
+        x: SPREAD[j].x + offsetX,
+        y: SPREAD[j].y,
+        scale: j === i ? 1.06 : 1,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+      card.style.zIndex = j === i ? "100" : String(j + 1);
+    });
+  };
+
+  const handleContainerLeave = () => restoreAll();
+
   return (
     <section ref={sectionRef} id="about" className="relative py-32 px-6 overflow-hidden">
-      {/* Full-section code backdrop — updated live as stack scrolls */}
-      <pre
-        ref={codeBackdropRef}
-        className="absolute inset-0 p-10 font-mono text-xs leading-relaxed pointer-events-none select-none overflow-hidden"
-        style={{ color: STACK[0].color, opacity: 0.08, whiteSpace: "pre", zIndex: 0 }}
-        aria-hidden
-      >{STACK[0].code}</pre>
-
-      <div className="relative max-w-6xl mx-auto" style={{ zIndex: 1 }}>
+      <div className="relative max-w-6xl mx-auto">
         <div className="section-label mb-10">03 / about</div>
 
         <div className="grid lg:grid-cols-2 gap-20">
@@ -215,10 +161,10 @@ export default function About() {
               <p>
                 I write JavaScript when I want things to work fast, C when I need to talk
                 directly to hardware, and Python when I need to interpret Python inside a
-                browser OS I also wrote. I don&apos;t have a threshold for "that&apos;s too hard."
+                browser OS I also wrote. I don&apos;t have a threshold for &quot;that&apos;s too hard.&quot;
               </p>
               <p>
-                When I&apos;m not building, I&apos;m on my FTC robotics team — which is mostly
+                When I&apos;m not building, I&apos;m on my FTC robotics team &mdash; which is mostly
                 just another excuse to build software.
               </p>
             </div>
@@ -237,36 +183,90 @@ export default function About() {
           </div>
         </div>
 
-        {/* Tech stack — GSAP stacking cards with code backdrop */}
+        {/* Tech stack */}
         <div className="mt-24" id="stack" ref={stackRef}>
-          <div className="section-label mb-6">Stack</div>
-          <div ref={stackInner} className="relative rounded-2xl overflow-hidden" style={{ height: "240px" }}>
+          <div className="section-label mb-8">Stack</div>
+
+          {/* Desktop: casino deal + cascade flip */}
+          <div
+            className="hidden lg:block relative"
+            style={{ height: "420px", perspective: "1200px" }}
+            onMouseLeave={handleContainerLeave}
+          >
             {STACK.map((s, i) => (
               <div
                 key={s.name}
                 ref={el => { cardRefs.current[i] = el; }}
-                className="absolute inset-0 rounded-2xl overflow-hidden"
-                style={{ zIndex: i + 1 }}
+                className="absolute rounded-xl cursor-pointer"
+                style={{
+                  width: 150, height: 200,
+                  left: "50%", marginLeft: -75,
+                  top: 60,
+                  zIndex: i + 1,
+                  transformStyle: "preserve-3d",
+                }}
+                onMouseEnter={() => handleCardHover(i)}
               >
-                {/* Solid backing so previous card is fully hidden */}
-                <div className="stack-card absolute inset-0" style={{ background: "linear-gradient(135deg, #080d1a 0%, #0c1120 100%)" }} />
-                {/* Code fills the whole card height */}
-                <pre
-                  className="stack-code-bg absolute inset-0 p-6 font-mono text-xs leading-relaxed pointer-events-none select-none overflow-hidden"
-                  style={{ color: s.color }}
-                  aria-hidden
-                >{s.code}</pre>
-                {/* Subtle accent glow on the right */}
-                <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse 60% 150% at 100% 50%, ${s.color}12 0%, transparent 70%)` }} />
-                {/* Label row pinned to bottom */}
-                <div className="absolute bottom-0 inset-x-0 flex items-center gap-4 px-6 py-4"
-                  style={{ background: `linear-gradient(to top, #080d1a 60%, transparent)` }}>
-                  <s.Icon style={{ color: s.color }} className="text-2xl flex-shrink-0" />
-                  <span className="font-display font-bold text-lg text-white">{s.name}</span>
-                  <div className="ml-auto h-px flex-1 max-w-xs" style={{ background: `linear-gradient(to right, ${s.color}66, transparent)` }} />
-                  <span className="terminal text-xs text-slate-500">{i + 1}/{STACK.length}</span>
+                {/* Back face — visible before flip */}
+                <div
+                  className="absolute inset-0 rounded-xl stack-card"
+                  style={{ backfaceVisibility: "hidden" }}
+                >
+                  <div
+                    className="absolute inset-2 rounded-lg"
+                    style={{
+                      border: "1px solid rgba(255,255,255,0.06)",
+                      backgroundImage:
+                        "repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.018) 8px, rgba(255,255,255,0.018) 9px)",
+                    }}
+                  />
+                </div>
+
+                {/* Front face — revealed by flip */}
+                <div
+                  className="absolute inset-0 rounded-xl overflow-hidden stack-card"
+                  style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                >
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{ background: `radial-gradient(ellipse at 80% 15%, ${s.color}22 0%, transparent 65%)` }}
+                  />
+                  <div className="relative flex flex-col items-center justify-between h-full p-4">
+                    <div className="flex-1 flex items-center justify-center">
+                      <s.Icon style={{ color: s.color }} className="text-5xl" />
+                    </div>
+                    <div className="w-full">
+                      <div className="font-display font-bold text-sm text-white text-center mb-2">
+                        {s.name}
+                      </div>
+                      <div className="w-full h-0.5 rounded-full mb-3" style={{ background: "rgba(255,255,255,0.1)" }}>
+                        <div className="h-full rounded-full" style={{ width: `${s.proficiency}%`, background: s.color }} />
+                      </div>
+                      <Link
+                        href={`/stack/${s.slug}`}
+                        className="block text-center text-xs transition-opacity hover:opacity-100"
+                        style={{ color: s.color, opacity: 0.55 }}
+                      >
+                        Details →
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* Mobile: grid of tech chips */}
+          <div className="lg:hidden grid grid-cols-3 sm:grid-cols-4 gap-3">
+            {STACK.map((s) => (
+              <Link
+                key={s.name}
+                href={`/stack/${s.slug}`}
+                className="glass flex flex-col items-center gap-2 p-4 rounded-xl hover:border-white/20 transition-all"
+              >
+                <s.Icon style={{ color: s.color }} className="text-2xl" />
+                <span className="text-xs text-slate-400 text-center leading-tight">{s.name}</span>
+              </Link>
             ))}
           </div>
         </div>

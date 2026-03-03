@@ -413,25 +413,13 @@ html[data-theme="light"] .border-white\/5 {
   border-color: rgba(0,60,140,0.1) !important;
 }
 
+/* Stack cards — dark mode base */
+.stack-card {
+  background: linear-gradient(135deg, #080d1a 0%, #0c1120 100%);
+}
+
 /* Stack cards — light mode */
 html[data-theme="light"] .stack-card {
   background: linear-gradient(135deg, #f5f9ff 0%, #eef4ff 100%) !important;
   box-shadow: 0 2px 12px rgba(0,60,140,0.08), inset 0 1px 0 rgba(255,255,255,0.8) !important;
-}
-
-/* Stack code backdrop */
-@keyframes code-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 0.22; transform: translateY(0); }
-}
-@keyframes code-fade-in-light {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 0.30; transform: translateY(0); }
-}
-.stack-code-bg {
-  animation: code-fade-in 0.35s ease forwards;
-  white-space: pre;
-}
-html[data-theme="light"] .stack-code-bg {
-  animation: code-fade-in-light 0.35s ease forwards;
 }

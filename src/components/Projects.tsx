@@ -45,7 +45,7 @@ export const PROJECTS = [
     name:        "GelbIT",
     tagline:     "AI recycling assistant for USAG Stuttgart military families",
     description: "Military families relocating to Germany face German's strict 5-bin recycling system with zero guidance. Built a computer-vision + agentic AI app: a fine-tuned Gemma model classifies items (including contamination), then an agentic Python/Selenium/Ollama system live-scrapes local municipal rules and returns hyper-local, multi-language instructions. 94% accuracy across 100 items. 85% self-reported increase in recycling compliance from beta users.",
-    tags:        ["Python", "Gemma", "Selenium", "Ollama", "Computer Vision", "Agentic AI"],
+    tags:        ["Python", "Gemma", "Computer Vision", "Agentic AI"],
     metrics:     { before: "70% newcomers confused", after: "94% accuracy", delta: "+85%" },
     accent:      "#facc15",
     year:        "2026",
@@ -116,7 +116,7 @@ export default function Projects() {
     <>
       {/* Anchor target placed outside the pinned section so native scroll works */}
       <div id="projects" style={{ position: "relative", top: 0 }} aria-hidden />
-      <section ref={sectionRef} className="relative flex flex-col" style={{ overflowX: "hidden" }}>
+      <section ref={sectionRef} className="relative flex flex-col" style={{ overflow: "hidden" }}>
       <div className="max-w-7xl mx-auto px-6 pt-20 pb-4 flex-shrink-0">
         <div ref={headingRef}>
           <div className="section-label mb-4">02 / projects</div>
