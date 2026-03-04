@@ -9,7 +9,7 @@ export default async function BlogPreview() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <div className="section-label mb-4">04 / writing</div>
+            <div className="section-label mb-4">05 / writing</div>
             <h2 className="font-display font-black text-[clamp(2rem,4vw,3.5rem)] text-white leading-tight">
               Technical writing<br />
               <span className="text-gradient-cyan">on things I&apos;ve built.</span>

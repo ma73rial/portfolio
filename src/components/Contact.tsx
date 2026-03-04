@@ -61,7 +61,7 @@ export default function Contact() {
       />
 
       <div className="max-w-4xl mx-auto">
-        <div className="section-label mb-4">05 / contact</div>
+        <div className="section-label mb-4">06 / contact</div>
         <h2 className="font-display font-black text-[clamp(2rem,5vw,4rem)] text-white leading-tight mb-4">
           Got something cool<br />
           <span className="text-gradient-cyan">you want to build?</span>
