@@ -57,6 +57,16 @@ export const PROJECTS = [
     year:        "2025",
     status:      "Live",
   },
+  {
+    id:          "mit-maker-analysis",
+    name:        "MIT Maker Analysis",
+    tagline:     "ML pipeline to reverse-engineer MIT acceptance patterns",
+    description: "Scraped 105 YouTube Maker Portfolio videos (25 accepted, 21 rejected), extracted transcripts, and trained a Gradient Boosting classifier on NLP features + Gemma:7b project extraction. 73.9% LOO accuracy. The irony of building this as a current MIT applicant is not lost on me.",
+    tags:        ["Python", "NLP", "Gradient Boosting", "Ollama", "Gemma"],
+    accent:      "#818cf8",
+    year:        "2026",
+    status:      "Research",
+  },
 ];
 
 export default function Projects() {
@@ -120,7 +130,7 @@ export default function Projects() {
             <span className="text-gradient-cyan">Problems I&apos;ve killed.</span>
           </h2>
           <p className="text-slate-400 mt-4 max-w-lg">
-            Drag horizontally or scroll to explore. Each project started with something
+            Scroll to explore. Each project started with something
             that didn&apos;t exist or didn&apos;t work the way I needed.
           </p>
         </div>
