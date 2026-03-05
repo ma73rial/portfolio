@@ -287,8 +287,7 @@ function ProjectsTab({ apiFetch: _apiFetch, toast: _toast }: AdminProps) {
                   <span className="terminal text-xs px-2 py-1 rounded border" style={{ color: p.accent, borderColor: `${p.accent}33` }}>{p.status}</span>
                 </td>
                 <td className="px-6 py-4 hidden lg:table-cell">
-                  <span className="terminal text-xs text-emerald-400 font-bold">{p.metrics.delta}</span>
-                  <span className="terminal text-xs text-slate-500 ml-1">{p.metrics.before} → {p.metrics.after}</span>
+                  <span className="terminal text-xs text-slate-500">{p.tags.join(", ")}</span>
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link href={`/blog/${p.id}`} target="_blank"
