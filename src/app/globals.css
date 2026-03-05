@@ -332,6 +332,30 @@ body {
   margin: 2.5rem 0;
 }
 
+.prose-portfolio table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.75rem 0;
+  font-size: 0.88rem;
+}
+.prose-portfolio thead th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.35);
+  color: #a0bcd8;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+.prose-portfolio tbody td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+  color: #c8dff0;
+}
+.prose-portfolio tbody tr:last-child td { border-bottom: none; }
+.prose-portfolio tbody tr:hover td { background: rgba(0, 212, 255, 0.04); }
+
 /* ── Chart bars ─────────────────────────────────── */
 @keyframes bar-grow {
   from { transform: scaleY(0); }
@@ -441,6 +465,9 @@ html[data-theme="light"] .prose-portfolio blockquote { color: #2a4a70; }
 html[data-theme="light"] .prose-portfolio a { color: #0070a8; }
 html[data-theme="light"] .prose-portfolio strong { color: #0a1830; }
 html[data-theme="light"] .prose-portfolio hr { border-color: rgba(0,100,180,0.1); }
+html[data-theme="light"] .prose-portfolio thead th { color: #4a6a90; border-color: rgba(0,100,180,0.3); }
+html[data-theme="light"] .prose-portfolio tbody td { color: #2a4a70; border-color: rgba(0,100,180,0.08); }
+html[data-theme="light"] .prose-portfolio tbody tr:hover td { background: rgba(0,100,180,0.04); }
 
 /* ── Light mode contrast fixes ───────────────────── */
 html[data-theme="light"] .text-gradient-white {

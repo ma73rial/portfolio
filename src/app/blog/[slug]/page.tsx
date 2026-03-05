@@ -3,6 +3,7 @@ import Link          from "next/link";
 import { getPost, getAllPosts } from "@/lib/posts";
 import { remark }   from "remark";
 import remarkHtml   from "remark-html";
+import remarkGfm    from "remark-gfm";
 import ReadingProgress from "./ReadingProgress";
 
 interface Props {
@@ -30,7 +31,7 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   // Convert markdown → HTML
-  const processed = await remark().use(remarkHtml).process(post.content);
+  const processed = await remark().use(remarkGfm).use(remarkHtml).process(post.content);
   const html = processed.toString();
 
   return (
