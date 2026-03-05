@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import dynamic from "next/dynamic";
 
@@ -16,6 +16,12 @@ export default function Hero() {
   const ctaRef      = useRef<HTMLDivElement>(null);
   const metaRef     = useRef<HTMLDivElement>(null);
   const [typedWord, setTypedWord] = useState(WORDS[0]);
+
+  // Hide animated elements immediately (before first paint) to prevent flash
+  useLayoutEffect(() => {
+    const words = titleRef.current?.querySelectorAll(".word");
+    if (words?.length) gsap.set(words, { opacity: 0, y: 60, rotateX: -40 });
+  }, []);
 
   // Typewriter effect
   useEffect(() => {
@@ -127,7 +133,7 @@ export default function Hero() {
           ))}
           {" "}
           <span className="word inline-block text-gradient-white">from scratch</span>
-          <span className="text-cyan-400">.</span>
+          <span className="word inline-block text-cyan-400">.</span>
         </h1>
 
         {/* Rotating sub-description */}

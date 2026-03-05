@@ -215,9 +215,9 @@ export default function About() {
                   <div
                     className="absolute inset-2 rounded-lg"
                     style={{
-                      border: "1px solid rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.18)",
                       backgroundImage:
-                        "repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.018) 8px, rgba(255,255,255,0.018) 9px)",
+                        "repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.07) 8px, rgba(255,255,255,0.07) 9px)",
                     }}
                   />
                 </div>

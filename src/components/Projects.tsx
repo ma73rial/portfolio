@@ -132,7 +132,7 @@ export default function Projects() {
       </div>
 
       {/* Horizontal track */}
-      <div ref={trackRef} className="flex gap-6 px-6 pb-4 projects-track flex-1" style={{ willChange: "transform", alignItems: "stretch" }}>
+      <div ref={trackRef} className="flex gap-6 px-6 pb-4 projects-track flex-1" data-cursor="drag" style={{ willChange: "transform", alignItems: "flex-end" }}>
         {PROJECTS.map((p) => (
           <ProjectCard key={p.id} project={p} />
         ))}
@@ -172,8 +172,8 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
   return (
     <div
       ref={cardRef}
-      className="project-card relative flex-none w-[380px] glass rounded-2xl p-8 flex flex-col justify-between group overflow-hidden"
-      style={{ transformStyle: "preserve-3d", minHeight: "380px", height: "calc(100vh - 260px)", maxHeight: "560px" }}
+      className="project-card relative flex-none w-[380px] glass rounded-2xl flex flex-col group overflow-hidden"
+      style={{ transformStyle: "preserve-3d", height: "min(540px, calc(100svh - 300px))" }}
     >
       {/* Accent glow */}
       <div
@@ -183,7 +183,7 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
       />
 
       {/* Header */}
-      <div>
+      <div className="relative flex-1 overflow-y-auto min-h-0 p-8 pb-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <span
@@ -202,12 +202,12 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
 
         <h3 className="font-display font-black text-3xl text-white mb-2">{p.name}</h3>
         <p className="text-sm font-semibold mb-4" style={{ color: p.accent }}>{p.tagline}</p>
-        <p className="text-slate-400 text-sm leading-relaxed line-clamp-4">{p.description}</p>
+        <p className="text-slate-400 text-sm leading-relaxed">{p.description}</p>
       </div>
 
       {/* Metrics */}
-      <div>
-        <div className="mt-8 p-4 rounded-lg bg-navy-950/60 border border-white/5">
+      <div className="flex-shrink-0 px-8 pb-8">
+        <div className="p-4 rounded-lg bg-navy-950/60 border border-white/5">
           <div className="terminal text-xs text-slate-500 mb-3 tracking-wider">IMPACT</div>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div>

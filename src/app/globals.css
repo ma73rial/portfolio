@@ -24,7 +24,7 @@
 }
 
 /* ── Base ───────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: border-box; cursor: none !important; }
 
 html {
   scroll-behavior: smooth;
@@ -57,6 +57,35 @@ body {
   z-index: 1000;
 }
 
+/* ── Route loading bar (navigation) ─────────────── */
+@keyframes route-bar {
+  0%   { transform: scaleX(0); opacity: 1; }
+  80%  { transform: scaleX(0.9); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+#route-loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, #00d4ff, #00ffb3);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 99994;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+#route-loader.active {
+  opacity: 1;
+  animation: route-bar 8s cubic-bezier(0.1, 0.05, 0, 1) forwards;
+}
+#route-loader.done {
+  animation: none;
+  transform: scaleX(1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
 /* ── Custom cursor ──────────────────────────────── */
 .cursor-dot {
   position: fixed;
@@ -66,8 +95,8 @@ body {
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: background 0.2s;
   mix-blend-mode: screen;
+  transition: width 0.2s, height 0.2s, border-radius 0.2s, background 0.2s;
 }
 .cursor-ring {
   position: fixed;
@@ -77,12 +106,33 @@ body {
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+  transition: width 0.25s, height 0.25s, border-color 0.25s, background 0.25s, border-radius 0.25s, border-width 0.25s;
 }
-.cursor-ring.hovering {
+
+/* pointer: ring enlarges + green tint */
+.cursor-ring[data-mode="pointer"] {
   width: 56px; height: 56px;
   border-color: rgba(0, 255, 179, 0.7);
   background: rgba(0, 255, 179, 0.05);
+}
+
+/* text: dot becomes a vertical I-beam, ring hides */
+.cursor-dot[data-mode="text"] {
+  width: 2px; height: 20px;
+  border-radius: 1px;
+  background: #ffffff;
+  mix-blend-mode: difference;
+}
+.cursor-ring[data-mode="text"] {
+  width: 0; height: 0;
+  border-color: transparent;
+}
+
+/* drag: larger ring signals horizontal movement */
+.cursor-ring[data-mode="drag"] {
+  width: 64px; height: 40px;
+  border-color: rgba(0, 212, 255, 0.45);
+  border-radius: 20px;
 }
 
 /* ── Grid overlay ───────────────────────────────── */
@@ -415,11 +465,80 @@ html[data-theme="light"] .border-white\/5 {
 
 /* Stack cards — dark mode base */
 .stack-card {
-  background: linear-gradient(135deg, #080d1a 0%, #0c1120 100%);
+  background: linear-gradient(135deg, #0d1526 0%, #111a30 100%);
 }
 
 /* Stack cards — light mode */
 html[data-theme="light"] .stack-card {
   background: linear-gradient(135deg, #f5f9ff 0%, #eef4ff 100%) !important;
   box-shadow: 0 2px 12px rgba(0,60,140,0.08), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+/* ── Light mode cursor ───────────────────────────── */
+html[data-theme="light"] .cursor-dot {
+  background: #0060a0;
+  mix-blend-mode: normal;
+}
+html[data-theme="light"] .cursor-dot[data-mode="text"] {
+  background: #0a1830;
+  mix-blend-mode: normal;
+}
+html[data-theme="light"] .cursor-ring {
+  border-color: rgba(0, 96, 160, 0.5);
+}
+html[data-theme="light"] .cursor-ring[data-mode="pointer"] {
+  border-color: rgba(0, 140, 90, 0.7);
+  background: rgba(0, 140, 90, 0.07);
+}
+html[data-theme="light"] .cursor-ring[data-mode="drag"] {
+  border-color: rgba(0, 96, 160, 0.4);
+}
+
+/* ── Page loader ─────────────────────────────────── */
+/* React owns the outer div; CSS animation-delay handles the 0.5s reveal.
+   Parent opacity:0 hides children even if their own animation fires — so on
+   fast connections (hydration < 500ms) the inner content is never seen. */
+@keyframes loader-bar {
+  0%   { left: -45%; }
+  100% { left: 105%; }
+}
+@keyframes loader-inner-appear {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  /* Hidden until 0.5s — if parent fades first this never fires visibly */
+  opacity: 0;
+  animation: loader-inner-appear 0.25s ease forwards;
+  animation-delay: 0.5s;
+}
+.loader-bar-track {
+  position: relative;
+  width: 120px;
+  height: 2px;
+  background: rgba(0, 212, 255, 0.12);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.loader-bar-fill {
+  position: absolute;
+  left: -45%;
+  top: 0;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #00d4ff, #00ffb3);
+  border-radius: 9999px;
+  animation: loader-bar 1.2s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+.loader-status {
+  font-family: var(--font-mono), 'Courier New', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #5a7a9a;
 }

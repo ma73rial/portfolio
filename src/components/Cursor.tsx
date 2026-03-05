@@ -2,6 +2,17 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
+type CursorMode = "default" | "pointer" | "text" | "drag";
+
+const getMode = (target: EventTarget | null): CursorMode => {
+  const el = target as Element | null;
+  if (!el) return "default";
+  if (el.closest("[data-cursor='drag']"))               return "drag";
+  if (el.closest("a, button, [data-cursor='pointer']")) return "pointer";
+  if (el.closest("p, h1, h2, h3, h4, h5, h6, li, blockquote, td")) return "text";
+  return "default";
+};
+
 export default function Cursor() {
   const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -14,11 +25,17 @@ export default function Cursor() {
     let mouseX = 0, mouseY = 0;
     let ringX  = 0, ringY  = 0;
 
+    const setMode = (mode: CursorMode) => {
+      dot.dataset.mode  = mode;
+      ring.dataset.mode = mode;
+    };
+
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       setVisible(true);
       gsap.to(dot, { x: mouseX, y: mouseY, duration: 0.08, ease: "power2.out" });
+      setMode(getMode(e.target));
     };
 
     const lerp = () => {
@@ -28,15 +45,6 @@ export default function Cursor() {
       requestAnimationFrame(lerp);
     };
     const raf = requestAnimationFrame(lerp);
-
-    // Hover enlarge on interactive elements
-    const hoverEls = document.querySelectorAll("a, button, [data-cursor]");
-    const onEnter  = () => ring.classList.add("hovering");
-    const onLeave  = () => ring.classList.remove("hovering");
-    hoverEls.forEach(el => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    });
 
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseleave", () => setVisible(false));
