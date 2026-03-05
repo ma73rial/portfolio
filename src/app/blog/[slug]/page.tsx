@@ -31,7 +31,7 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   // Convert markdown → HTML
-  const processed = await remark().use(remarkGfm).use(remarkHtml).process(post.content);
+  const processed = await remark().use(remarkGfm).use(remarkHtml, { allowDangerousHtml: true }).process(post.content);
   const html = processed.toString();
 
   return (

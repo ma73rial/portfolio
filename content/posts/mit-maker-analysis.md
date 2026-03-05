@@ -17,12 +17,8 @@ So I did.
 
 **TL;DR — how do you differentiate accepted from rejected?**
 
-| Signal | Accepted | Rejected |
-|---|---|---|
-| Past:Future tense ratio | **2.60×** | 2.19× |
-| Project success rate | **89%** | 45% |
-| Avg revisions per project | 1.15 | **1.74** |
-| GBM LOO-CV accuracy | **73.9%** | — |
+<img class="blog-table-img blog-img-dark"  src="/images/blog/tldr-summary-dark.png"  alt="TL;DR summary table" />
+<img class="blog-table-img blog-img-light" src="/images/blog/tldr-summary-light.png" alt="TL;DR summary table" />
 
 Accepted portfolios talk about finished things in past tense. Rejected ones talk about ideas and iterations that didn't close.
 
@@ -83,11 +79,8 @@ Accepted applicants use thinking-verbs ("design", "decide", "learn") and buildin
 
 This is the strongest signal in the dataset, and it comes from the LLM layer.
 
-| Metric | Accepted | Rejected |
-|---|---|---|
-| Projects with "success" outcome | **89%** | **45%** |
-| Projects with "partial/failed" | 7% | **45%** |
-| Avg revisions per project | **1.15** | **1.74** |
+<img class="blog-table-img blog-img-dark"  src="/images/blog/project-outcomes-dark.png"  alt="Project outcomes table" />
+<img class="blog-table-img blog-img-light" src="/images/blog/project-outcomes-light.png" alt="Project outcomes table" />
 
 Accepted portfolios are full of *finished things*. Rejected portfolios show more projects that were abandoned mid-way, or iterated without resolution. The avg revision count (1.15 vs 1.74) is interesting — accepted applicants also iterate, but they close the loop.
 
@@ -101,16 +94,8 @@ I trained a Gradient Boosting Classifier on 17 features combining the linguistic
 
 The most important features:
 
-| Rank | Feature | Importance |
-|---|---|---|
-| 1 | `project_partial_rate` — share of projects with partial/failed outcome | 0.362 |
-| 2 | `avg_revisions_per_project` — iteration count per project | 0.160 |
-| 3 | `adv_ratio` — adverbs as share of tokens (hedging language) | 0.130 |
-| 4 | `token_count_log2` — transcript length (longer = more to say) | 0.069 |
-| 5 | `past_future_ratio` — past vs future tense verb count | 0.053 |
-| 6 | `thinking_building_ratio` — conceptual vs hands-on verb balance | 0.044 |
-| 7 | `verb_ratio` — verbs as share of all tokens | 0.038 |
-| 8–17 | POS ratios (noun, adj), project count, success rate, avg rating, project type diversity… | <0.03 each |
+<img class="blog-table-img blog-img-dark"  src="/images/blog/feature-importance-dark.png"  alt="Feature importance table" />
+<img class="blog-table-img blog-img-light" src="/images/blog/feature-importance-light.png" alt="Feature importance table" />
 
 The single strongest predictor is whether Gemma perceives projects as "partial" or "success". Linguistic hedging (adverb ratio) is third — applicants who say "kind of", "basically", "sort of" frequently are more likely to be rejected, possibly because hedging language signals uncertainty about the work.
 

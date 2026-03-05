@@ -473,6 +473,16 @@ html[data-theme="light"] .prose-portfolio thead th { color: #4a6a90; border-colo
 html[data-theme="light"] .prose-portfolio tbody td { color: #2a4a70; border-color: rgba(0,100,180,0.08); }
 html[data-theme="light"] .prose-portfolio tbody tr:hover td { background: rgba(0,100,180,0.04); }
 
+/* Blog table images: show dark by default, swap on light theme */
+.prose-portfolio .blog-img-dark  { display: block; }
+.prose-portfolio .blog-img-light { display: none;  }
+html[data-theme="light"] .prose-portfolio .blog-img-dark  { display: none;  }
+html[data-theme="light"] .prose-portfolio .blog-img-light { display: block; }
+.prose-portfolio .blog-table-img {
+  width: 100%; max-width: 100%; border-radius: 6px;
+  margin: 1.5rem 0;
+}
+
 /* ── Light mode contrast fixes ───────────────────── */
 html[data-theme="light"] .text-gradient-white {
   background: linear-gradient(135deg, #0a1830 0%, #2a4a70 100%);
