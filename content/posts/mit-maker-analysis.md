@@ -26,6 +26,8 @@ So I did.
 
 Accepted portfolios talk about finished things in past tense. Rejected ones talk about ideas and iterations that didn't close.
 
+> **People who finish projects talk like they finish projects.** That's the thesis, and the data backs it up.
+
 ## The Dataset
 
 I used `yt-dlp` to scrape YouTube for `"MIT Maker Portfolio"` videos plus targeted queries with `"accepted"` and `"rejected"` as modifiers. Labels were assigned from the video *title only* — no manual annotation, just string matching. Anything with "accepted" in the title → Accepted. "rejected" or "denied" → Rejected. Everything else → Unknown.
@@ -101,16 +103,20 @@ The most important features:
 
 | Rank | Feature | Importance |
 |---|---|---|
-| 1 | `project_partial_rate` | 0.362 |
-| 2 | `avg_revisions_per_project` | 0.160 |
-| 3 | `adv_ratio` (hedging language) | 0.130 |
-| 4 | `token_count_log2` (transcript length) | 0.069 |
+| 1 | `project_partial_rate` — share of projects with partial/failed outcome | 0.362 |
+| 2 | `avg_revisions_per_project` — iteration count per project | 0.160 |
+| 3 | `adv_ratio` — adverbs as share of tokens (hedging language) | 0.130 |
+| 4 | `token_count_log2` — transcript length (longer = more to say) | 0.069 |
+| 5 | `past_future_ratio` — past vs future tense verb count | 0.053 |
+| 6 | `thinking_building_ratio` — conceptual vs hands-on verb balance | 0.044 |
+| 7 | `verb_ratio` — verbs as share of all tokens | 0.038 |
+| 8–17 | POS ratios (noun, adj), project count, success rate, avg rating, project type diversity… | <0.03 each |
 
 The single strongest predictor is whether Gemma perceives projects as "partial" or "success". Linguistic hedging (adverb ratio) is third — applicants who say "kind of", "basically", "sort of" frequently are more likely to be rejected, possibly because hedging language signals uncertainty about the work.
 
 ## What This Means (Carefully)
 
-This is a correlational study, not causal. 73.9% accuracy on 46 examples is meaningful but not definitive. The findings point at real patterns, but they probably reflect a deeper underlying variable: **people who finish projects talk like they finish projects**.
+This is a correlational study, not causal. 73.9% accuracy on 46 examples is meaningful but not definitive. The findings point at real patterns — but they're measuring a symptom, not the cause.
 
 The most useful practical signal: your portfolio should be a portfolio of *completed* work, described in past tense, with specific technical verbs. Don't talk about what you want to build. Don't over-explain your thinking. Show what you shipped.
 
