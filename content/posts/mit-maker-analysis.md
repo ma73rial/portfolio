@@ -109,4 +109,4 @@ Running Gemma:7b locally (via Ollama) on a Mac Mini for 95 transcripts takes abo
 
 The full pipeline runs with `python3 run.py`. It's resumable — each step saves intermediate outputs, so if Ollama crashes mid-batch it picks up where it left off.
 
-Code is [on GitHub](https://github.com/ma73rial/ytscraper).
+Code and the full dataset — including box plots, scatter plots, confidence distributions, and mean comparison charts — are [on GitHub](https://github.com/Ma7erial/MIT-Maker-Portfolio-Dataset-and-Analysis).
