@@ -105,7 +105,7 @@ The irony of me — a current MIT applicant — building this pipeline to analyz
 
 ## Technical Notes
 
-Running Gemma:7b locally (via Ollama) on a MacBook Pro for 95 transcripts takes about 4 hours. The extraction quality is better than I expected for a 7B model, especially for straightforward project descriptions. It does have a strong bias toward rating everything 7-8/10 and predicting "Accepted" — the project extraction is more useful than its direct predictions.
+Running Gemma:7b locally (via Ollama) on a Mac Mini for 95 transcripts takes about an hour end-to-end. The extraction quality is better than I expected for a 7B model, especially for straightforward project descriptions. It does have a strong bias toward rating everything 7-8/10 and predicting "Accepted" — the project extraction is more useful than its direct predictions.
 
 The full pipeline runs with `python3 run.py`. It's resumable — each step saves intermediate outputs, so if Ollama crashes mid-batch it picks up where it left off.
 
