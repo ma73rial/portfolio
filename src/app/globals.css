@@ -340,19 +340,23 @@ body {
 }
 .prose-portfolio thead th {
   text-align: left;
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 1.25rem;
   border-bottom: 1px solid rgba(0, 212, 255, 0.35);
+  border-right: 1px solid rgba(0, 212, 255, 0.12);
   color: #a0bcd8;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   font-size: 0.75rem;
 }
+.prose-portfolio thead th:last-child { border-right: none; }
 .prose-portfolio tbody td {
-  padding: 0.6rem 1rem;
+  padding: 0.6rem 1.25rem;
   border-bottom: 1px solid rgba(0, 212, 255, 0.08);
+  border-right: 1px solid rgba(0, 212, 255, 0.08);
   color: #c8dff0;
 }
+.prose-portfolio tbody td:last-child { border-right: none; }
 .prose-portfolio tbody tr:last-child td { border-bottom: none; }
 .prose-portfolio tbody tr:hover td { background: rgba(0, 212, 255, 0.04); }
 

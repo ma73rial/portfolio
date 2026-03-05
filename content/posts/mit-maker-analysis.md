@@ -5,19 +5,6 @@ excerpt: "105 YouTube videos, a Gradient Boosting classifier, and a local Gemma:
 tags: ["Python", "NLP", "Machine Learning", "Ollama", "Gemma"]
 ---
 
-## How do you differentiate?
-
-| Signal | Accepted | Rejected |
-|---|---|---|
-| Past:Future tense ratio | **2.60×** | 2.19× |
-| Project success rate | **89%** | 45% |
-| GBM LOO-CV accuracy | **73.9%** | — |
-| Avg revisions per project | 1.15 | **1.74** |
-
-Accepted portfolios talk about finished things in past tense. Rejected ones talk about ideas and iterations that didn't close. That's the core finding, backed by 46 labeled videos, a Gradient Boosting classifier, and a local Gemma:7b LLM for project extraction. Details below.
-
----
-
 ## The Meta Problem
 
 I'm applying to MIT. MIT has a Maker Portfolio — an optional submission where you document 5 things you've built. Most applicants don't know what the portfolio should look like, what signals admission officers are actually reading for, or whether it matters.
@@ -25,6 +12,19 @@ I'm applying to MIT. MIT has a Maker Portfolio — an optional submission where 
 I thought: there are YouTube videos of both accepted and rejected MIT applicants presenting their Maker Portfolios. That's labeled data. What if I could train a classifier on it?
 
 So I did.
+
+---
+
+**TL;DR — how do you differentiate accepted from rejected?**
+
+| Signal | Accepted | Rejected |
+|---|---|---|
+| Past:Future tense ratio | **2.60×** | 2.19× |
+| Project success rate | **89%** | 45% |
+| Avg revisions per project | 1.15 | **1.74** |
+| GBM LOO-CV accuracy | **73.9%** | — |
+
+Accepted portfolios talk about finished things in past tense. Rejected ones talk about ideas and iterations that didn't close.
 
 ## The Dataset
 
