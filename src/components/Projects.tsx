@@ -205,27 +205,10 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
         <p className="text-slate-400 text-sm leading-relaxed">{p.description}</p>
       </div>
 
-      {/* Metrics */}
+      {/* Footer */}
       <div className="flex-shrink-0 px-8 pb-8">
-        <div className="p-4 rounded-lg bg-navy-950/60 border border-white/5">
-          <div className="terminal text-xs text-slate-500 mb-3 tracking-wider">IMPACT</div>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <div className="terminal text-xs text-slate-500 mb-1">Before</div>
-              <div className="text-sm text-slate-300 font-semibold">{p.metrics.before}</div>
-            </div>
-            <div className="flex items-center justify-center">
-              <span className="font-display font-black text-lg" style={{ color: p.accent }}>{p.metrics.delta}</span>
-            </div>
-            <div>
-              <div className="terminal text-xs text-slate-500 mb-1">After</div>
-              <div className="text-sm text-white font-semibold">{p.metrics.after}</div>
-            </div>
-          </div>
-        </div>
-
         {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-5">
+        <div className="flex flex-wrap gap-2 mb-5">
           {p.tags.map(t => (
             <span
               key={t}
@@ -239,7 +222,7 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
         {/* Case study link */}
         <Link
           href={`/blog/${p.id}`}
-          className="mt-5 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase hover:text-cyan-400 transition-colors"
+          className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase hover:text-cyan-400 transition-colors"
           style={{ color: p.accent }}
         >
           Read case study
