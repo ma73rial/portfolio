@@ -5,7 +5,7 @@ import gsap from "gsap";
 
 const STATS = [
   { value: 5,   suffix: "",    label: "Projects shipped",            sub: "open source & in production" },
-  { value: 4,   suffix: "",    label: "Linux kernel contributions",   sub: "Incl. dlink-dwa131 h1 driver"      },
+  { value: 7,   suffix: "",    label: "Linux kernel contributions",   sub: "Incl. dlink-dwa131 h1 driver"      },
   { value: 3,   suffix: "",    label: "FTC teams on my dashboard",   sub: "teams #10937 & #30548"       },
   { value: 20,  suffix: "+",   label: "Built-in apps (Vira OS)",     sub: "full OS in the browser"      },
 ];
@@ -18,7 +18,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   useEffect(() => {
     if (!inView) return;
     gsap.to(obj.current, {
-      val: value,
+      val: value,    
       duration: 2,
       ease: "power2.out",
       onUpdate: () => setDisplay(parseFloat(obj.current.val.toFixed(value < 10 ? 1 : 0))),
