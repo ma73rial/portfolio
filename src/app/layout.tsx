@@ -3,8 +3,6 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Cursor from "@/components/Cursor";
-import OfflineManager from "@/components/OfflineManager";
-import PageLoader from "@/components/PageLoader";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -43,8 +41,6 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} bg-navy-900 text-slate-200 antialiased`}
       >
-        {/* Page loader — React-owned, dismissed on hydration */}
-        <PageLoader />
         {/* Route transition loading bar */}
         <div id="route-loader" aria-hidden="true" />
         {/* Animated scan line */}
@@ -53,8 +49,6 @@ export default function RootLayout({
         <div className="scroll-progress" aria-hidden />
         {/* Custom cursor */}
         <Cursor />
-        {/* Offline caching / PWA */}
-        <OfflineManager />
         {/* Navigation */}
         <Nav />
         {/* Page content */}
