@@ -209,9 +209,8 @@ body {
 
 /* ── Horizontal scroll track ────────────────────── */
 .projects-track {
-  display: flex;
-  gap: 2rem;
-  width: max-content;
+  display: grid;
+  gap: 1.5rem;
 }
 
 /* ── Section label ─────────────────────────────── */

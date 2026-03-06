@@ -9,30 +9,30 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Precompute final spread positions — arc fan, center highest, edges droop down
 const SPREAD = STACK.map((_, i) => {
-  const t       = STACK.length > 1 ? i / (STACK.length - 1) : 0.5;
-  const theta   = (t - 0.5) * 56;                  // −28° → +28°
-  const rad     = (theta * Math.PI) / 180;
+  const t = STACK.length > 1 ? i / (STACK.length - 1) : 0.5;
+  const theta = (t - 0.5) * 56;                  // −28° → +28°
+  const rad = (theta * Math.PI) / 180;
   return {
-    x:       Math.sin(rad) * 700,                   // lateral displacement
-    y:       (1 - Math.cos(rad)) * 350,             // downward arc at edges (+y = down)
+    x: Math.sin(rad) * 700,                   // lateral displacement
+    y: (1 - Math.cos(rad)) * 350,             // downward arc at edges (+y = down)
     rotateZ: theta,
   };
 });
 
 const TIMELINE = [
-  { year: "2022", title: "First real program",  desc: "Started writing Python scripts to automate things in middle school. Never looked back." },
-  { year: "2023", title: "FTC Robotics",        desc: "Joined FIRST Tech Challenge teams #10937 and #30548 at Stuttgart High School. Immediately started building the team dashboard because 10 Google Tabs was not acceptable." },
-  { year: "2024", title: "Vira OS",             desc: "Built a full Mac-inspired OS running in the browser — filesystem, UAC, terminal, IDE, browser, 30+ apps, and a custom Python interpreter. From scratch. As a freshman." },
-  { year: "2025", title: "Linux Kernel Driver", desc: "Reverse-engineered the D-Link DWA-131 rev H1 USB WiFi chip, wrote a plug-and-play Linux kernel driver in C, and submitted it upstream." },
-  { year: "2025", title: "GelbIT",              desc: "Built an AI recycling assistant for USAG Stuttgart military families — computer vision, agentic scraping, and real-time local rules. Deployed to beta users." },
+  { year: "2021", title: "First real program", desc: "Started writing Python scripts to automate things in middle school. Never looked back." },
+  { year: "2024", title: "FTC Robotics", desc: "Joined FIRST Tech Challenge teams #10937 and #30548 at Stuttgart High School. Immediately started building and coding our robots in Java." },
+  { year: "2025", title: "Vira OS", desc: "Built a full Mac-inspired OS running in the browser — filesystem, UAC, terminal, IDE, browser, 30+ apps, and a custom Python interpreter. From scratch. As a freshman." },
+  { year: "2025", title: "Presidential AI Challenge", desc: "Built an AI recycling assistant for USAG Stuttgart military families — computer vision, agentic scraping, and real-time local rules. Deployed to beta users." },
+  { year: "2026", title: "Linux Kernel", desc: "Got started with real Open-source contribs. Reverse-engineered the D-Link DWA-131 rev H1 USB WiFi chip, wrote a plug-and-play Linux kernel driver in C, and submitted it upstream." }
 ];
 
 export default function About() {
-  const sectionRef  = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
-  const stackRef    = useRef<HTMLDivElement>(null);
-  const cardRefs    = useRef<(HTMLDivElement | null)[]>([]);
-  const isDealtRef  = useRef(false);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isDealtRef = useRef(false);
   const activeCardRef = useRef<number | null>(null);
 
   // Restore all cards to their SPREAD resting positions
@@ -86,21 +86,21 @@ export default function About() {
 
             // Phase 1: deal — each card slides to its arc position
             tl.to(cards, {
-              x:       (i: number) => SPREAD[i].x,
-              y:       (i: number) => SPREAD[i].y,
+              x: (i: number) => SPREAD[i].x,
+              y: (i: number) => SPREAD[i].y,
               rotateZ: (i: number) => SPREAD[i].rotateZ,
               duration: 0.4,
-              ease:     "power3.out",
-              stagger:  0.035,
+              ease: "power3.out",
+              stagger: 0.035,
             });
 
             // Phase 2: cascade flip — rotateY 0→180 in a wave
             // stagger of 0.05s means when card[0] is at 90°, card[1] is at ~72°, card[2] at ~54°, etc.
             tl.to(cards, {
-              rotateY:  180,
+              rotateY: 180,
               duration: 0.5,
-              ease:     "power1.inOut",
-              stagger:  0.05,
+              ease: "power1.inOut",
+              stagger: 0.05,
             }, "-=0.05");
           },
         });
@@ -108,9 +108,9 @@ export default function About() {
         // Restore all cards when user scrolls away
         ScrollTrigger.create({
           trigger: stackRef.current,
-          start:  "top bottom",
-          end:    "bottom top",
-          onLeave:     restoreAll,
+          start: "top bottom",
+          end: "bottom top",
+          onLeave: restoreAll,
           onLeaveBack: restoreAll,
         });
       });

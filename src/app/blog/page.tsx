@@ -16,8 +16,8 @@ export default async function BlogPage() {
         <div className="mb-16">
           <div className="section-label mb-4">Writing</div>
           <h1 className="font-display font-black text-[clamp(2.5rem,6vw,5rem)] text-white leading-tight mb-4">
-            Opinions on infra.<br />
-            <span className="text-gradient-cyan">Backed by benchmarks.</span>
+            Technical Writing:<br />
+            <span className="text-gradient-cyan">Things I've Built.</span>
           </h1>
           <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
             I write about distributed systems, performance engineering, and the art of

@@ -8,16 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const PROJECTS = [
   {
-    id:          "vira-os",
-    name:        "Vira OS",
-    tagline:     "A full Mac-inspired OS — running in your browser",
-    description: "Built from scratch in vanilla JS. Full filesystem with persistence, multi-user accounts with UAC, terminal, IDE, browser, games, and a custom Python interpreter. No backend. Runs entirely client-side at a file:// URL.",
-    tags:        ["Vanilla JS", "Python Interpreter", "Browser OS"],
-    accent:      "#00d4ff",
-    year:        "2024",
-    status:      "Open Source",
-  },
-  {
     id:          "ftc-dashboard",
     name:        "FTC Dashboard",
     tagline:     "10 Google Tabs → 1 unified platform",
@@ -28,14 +18,14 @@ export const PROJECTS = [
     status:      "npm package",
   },
   {
-    id:          "linux-driver",
-    name:        "DWA-131 H1 Driver",
-    tagline:     "Upstream Linux kernel driver for D-Link DWA-131 rev H1",
-    description: "The D-Link DWA-131 rev H1 USB WiFi adapter had zero Linux support. I reverse-engineered the chip, wrote a plug-and-play kernel driver in C, and submitted it upstream to the Linux kernel. It just works now.",
-    tags:        ["C", "Linux Kernel", "USB", "WiFi"],
-    accent:      "#f97316",
+    id:          "vira-os",
+    name:        "Vira OS",
+    tagline:     "A full Mac-inspired OS — running in your browser",
+    description: "Built from scratch in vanilla JS. Full filesystem with persistence, multi-user accounts with UAC, terminal, IDE, browser, games, and a custom Python interpreter. No backend. Runs entirely client-side at a file:// URL.",
+    tags:        ["Vanilla JS", "Python Interpreter", "Browser OS"],
+    accent:      "#00d4ff",
     year:        "2025",
-    status:      "Upstream",
+    status:      "Open Source",
   },
   {
     id:          "project-gelb",
@@ -44,7 +34,7 @@ export const PROJECTS = [
     description: "Military families relocating to Germany face German's strict 5-bin recycling system with zero guidance. Built a computer-vision + agentic AI app: a fine-tuned Gemma model classifies items (including contamination), then an agentic Python/Selenium/Ollama system live-scrapes local municipal rules and returns hyper-local, multi-language instructions. 94% accuracy across 100 items. 85% self-reported increase in recycling compliance from beta users.",
     tags:        ["Python", "Gemma", "Computer Vision", "Agentic AI"],
     accent:      "#facc15",
-    year:        "2026",
+    year:        "2025",
     status:      "Deployed",
   },
   {
@@ -56,6 +46,16 @@ export const PROJECTS = [
     accent:      "#a78bfa",
     year:        "2025",
     status:      "Live",
+  },
+  {
+    id:          "linux-driver",
+    name:        "DWA-131 H1 Driver",
+    tagline:     "Upstream Linux kernel driver for D-Link DWA-131 rev H1",
+    description: "The D-Link DWA-131 rev H1 USB WiFi adapter had zero Linux support. I reverse-engineered the chip, wrote a plug-and-play kernel driver in C, and submitted it upstream to the Linux kernel. It just works now.",
+    tags:        ["C", "Linux Kernel", "USB", "WiFi"],
+    accent:      "#f97316",
+    year:        "2026",
+    status:      "Upstream",
   },
   {
     id:          "mit-maker-analysis",
@@ -76,8 +76,6 @@ export default function Projects() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const track = trackRef.current!;
-
       // Heading reveal
       gsap.fromTo(headingRef.current,
         { opacity: 0, y: 40 },
@@ -87,31 +85,17 @@ export default function Projects() {
         }
       );
 
-      // Horizontal scroll — section fills full viewport, start when fully in view
-      if (sectionRef.current) sectionRef.current.style.height = "100vh";
-      const totalWidth = track.scrollWidth - window.innerWidth;
-      gsap.to(track, {
-        x: -totalWidth,
-        ease: "none",
-        scrollTrigger: {
-          trigger:  sectionRef.current,
-          start:    "bottom bottom",
-          end:      `+=${totalWidth + 200}`,
-          pin:      true,
-          scrub:    1.2,
-          anticipatePin: 1,
-        },
-      });
-
-      // Card entrance (staggered off-screen right)
-      const cards = track.querySelectorAll(".project-card");
-      gsap.fromTo(cards,
-        { opacity: 0, scale: 0.9 },
-        {
-          opacity: 1, scale: 1, duration: 0.6, stagger: 0.15,
-          scrollTrigger: { trigger: sectionRef.current, start: "top 80%", toggleActions: "play none none none" },
-        }
-      );
+      // Card entrance (staggered fade-in)
+      const cards = trackRef.current?.querySelectorAll(".project-card");
+      if (cards) {
+        gsap.fromTo(cards,
+          { opacity: 0, scale: 0.9 },
+          {
+            opacity: 1, scale: 1, duration: 0.6, stagger: 0.12,
+            scrollTrigger: { trigger: trackRef.current, start: "top 85%", toggleActions: "play none none none" },
+          }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -119,32 +103,33 @@ export default function Projects() {
 
   return (
     <>
-      {/* Anchor target placed outside the pinned section so native scroll works */}
-      <div id="projects" style={{ position: "relative", top: 0 }} aria-hidden />
-      <section ref={sectionRef} className="relative flex flex-col" style={{ overflow: "hidden" }}>
-      <div className="max-w-7xl mx-auto px-6 pt-20 pb-4 flex-shrink-0">
-        <div ref={headingRef}>
-          <div className="section-label mb-4">02 / projects</div>
-          <h2 className="font-display font-black text-[clamp(2rem,5vw,4rem)] text-white leading-tight">
-            Things I&apos;ve built.<br />
-            <span className="text-gradient-cyan">Problems I&apos;ve killed.</span>
-          </h2>
-          <p className="text-slate-400 mt-4 max-w-lg">
-            Scroll to explore. Each project started with something
-            that didn&apos;t exist or didn&apos;t work the way I needed.
-          </p>
+      <div id="projects" aria-hidden />
+      <section ref={sectionRef} className="relative pt-20 pb-16">
+        <div className="max-w-7xl mx-auto px-6 pb-10">
+          <div ref={headingRef}>
+            <div className="section-label mb-4">02 / projects</div>
+            <h2 className="font-display font-black text-[clamp(2rem,5vw,4rem)] text-white leading-tight">
+              Things I&apos;ve built.<br />
+              <span className="text-gradient-cyan">Problems I&apos;ve killed.</span>
+            </h2>
+            <p className="text-slate-400 mt-4 max-w-lg">
+              Each project started with something
+              that didn&apos;t exist or didn&apos;t work the way I needed.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Horizontal track */}
-      <div ref={trackRef} className="flex gap-6 px-6 pb-4 projects-track flex-1" data-cursor="drag" style={{ willChange: "transform", alignItems: "flex-end" }}>
-        {PROJECTS.map((p) => (
-          <ProjectCard key={p.id} project={p} />
-        ))}
-        {/* End spacer */}
-        <div className="min-w-[120px]" />
-      </div>
-    </section>
+        {/* Responsive card grid */}
+        <div
+          ref={trackRef}
+          className="max-w-7xl mx-auto px-6 grid gap-6 projects-track"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))" }}
+        >
+          {PROJECTS.map((p) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+        </div>
+      </section>
     </>
   );
 }
@@ -177,8 +162,8 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
   return (
     <div
       ref={cardRef}
-      className="project-card relative flex-none w-[380px] glass rounded-2xl flex flex-col group overflow-hidden"
-      style={{ transformStyle: "preserve-3d", height: "min(540px, calc(100svh - 300px))" }}
+      className="project-card relative glass rounded-2xl flex flex-col group overflow-hidden"
+      style={{ transformStyle: "preserve-3d" }}
     >
       {/* Accent glow */}
       <div
@@ -187,14 +172,11 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
         aria-hidden
       />
 
-      {/* Header */}
-      <div className="relative flex-1 overflow-y-auto min-h-0 p-8 pb-4">
+      {/* Content */}
+      <div className="relative flex-1 p-8 pb-4">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <span
-              className="w-2 h-2 rounded-full"
-              style={{ background: p.accent }}
-            />
+            <span className="w-2 h-2 rounded-full" style={{ background: p.accent }} />
             <span className="terminal text-xs text-slate-500 tracking-widest uppercase">{p.year}</span>
           </div>
           <span
@@ -212,7 +194,6 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
 
       {/* Footer */}
       <div className="flex-shrink-0 px-8 pb-8">
-        {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-5">
           {p.tags.map(t => (
             <span
@@ -224,7 +205,6 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
           ))}
         </div>
 
-        {/* Case study link */}
         <Link
           href={`/blog/${p.id}`}
           className="flex items-center gap-2 text-xs font-semibold tracking-widest uppercase hover:text-cyan-400 transition-colors"
@@ -239,3 +219,4 @@ function ProjectCard({ project: p }: { project: typeof PROJECTS[0] }) {
     </div>
   );
 }
+
