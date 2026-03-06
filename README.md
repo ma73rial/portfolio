@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# max.dev — Personal Portfolio
+
+Personal portfolio and blog for Maximilian Pezzullo. Built with Next.js 16, TypeScript, Tailwind CSS, and GSAP.
+
+## Stack
+
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + custom CSS (dark/light theme via `next-themes`)
+- **Animations**: GSAP + ScrollTrigger
+- **Blog**: Markdown files parsed with `gray-matter` + `remark`
+- **Contact**: Nodemailer (server-side API route)
+
+## Project Structure
+
+```
+src/
+  app/
+    page.tsx              — Homepage (Hero, Projects, About, Blog preview, Contact)
+    blog/[slug]/          — Individual blog post pages
+    blog/                 — Blog index
+    kernel/               — Linux kernel contributions page
+    stack/[slug]/         — Tech stack detail pages
+    admin/                — Password-protected admin panel
+    api/                  — Contact form + admin API routes
+  components/             — All UI components (Nav, Hero, Projects, About, etc.)
+  data/                   — Stack/tech data
+  lib/                    — Markdown parsing utilities
+
+content/
+  posts/                  — Blog posts as Markdown files
+    vira-os.md
+    ftc-dashboard.md
+    linux-driver.md
+    project-gelb.md
+    ap-world.md
+    mit-maker-analysis.md
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Writing a Blog Post
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Add a `.md` file to `content/posts/` with front matter:
 
-## Learn More
+```markdown
+---
+title: "Post title"
+date: "YYYY-MM-DD"
+excerpt: "Short description shown in previews."
+tags: ["Tag1", "Tag2"]
+---
 
-To learn more about Next.js, take a look at the following resources:
+Content here...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The slug is derived from the filename (`my-post.md` → `/blog/my-post`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding a Project
 
-## Deploy on Vercel
+Edit the `PROJECTS` array in `src/components/Projects.tsx`. Each entry needs:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```ts
+{
+  id:          "slug-matching-blog-post",
+  name:        "Display Name",
+  tagline:     "One-liner",
+  description: "Card description",
+  tags:        ["Tech", "Stack"],
+  accent:      "#hexcolor",
+  year:        "YYYY",
+  status:      "Status badge text",
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Commands
+
+```bash
+npm run dev      # Dev server (Turbopack)
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # ESLint
+```
+
+## Environment Variables
+
+Create a `.env.local` for the contact form and admin panel:
+
+```
+EMAIL_USER=your@email.com
+EMAIL_PASS=your_app_password
+ADMIN_PASSWORD=your_admin_password
+```
+
