@@ -15,6 +15,14 @@ export interface PostMeta {
   lockedUntil?: string;
 }
 
+export interface LockedPost {
+  locked:      true;
+  slug:        string;
+  title:       string;
+  tags:        string[];
+  lockedUntil: string;
+}
+
 export interface Post extends PostMeta {
   content: string;
 }
@@ -50,7 +58,7 @@ export async function getAllPosts(): Promise<PostMeta[]> {
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export async function getPost(slug: string): Promise<Post | null> {
+export async function getPost(slug: string): Promise<Post | LockedPost | null> {
   const filePath = path.join(POSTS_DIR, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
 
@@ -58,7 +66,15 @@ export async function getPost(slug: string): Promise<Post | null> {
   const { data, content } = matter(raw);
 
   const lockedUntil = data.locked_until;
-  if (lockedUntil && new Date(lockedUntil) > new Date()) return null;
+  if (lockedUntil && new Date(lockedUntil) > new Date()) {
+    return {
+      locked:      true,
+      slug,
+      title:       data.title ?? "Untitled",
+      tags:        data.tags  ?? [],
+      lockedUntil,
+    };
+  }
 
   return {
     slug,

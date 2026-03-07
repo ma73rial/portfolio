@@ -5,6 +5,7 @@ import { remark }   from "remark";
 import remarkHtml   from "remark-html";
 import remarkGfm    from "remark-gfm";
 import ReadingProgress from "./ReadingProgress";
+import PostCountdown   from "@/components/PostCountdown";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Props) {
   if (!post) return {};
   return {
     title:       `${post.title} — Max Pezzullo`,
-    description: post.excerpt,
+    description: "locked" in post ? "This post is not yet available." : post.excerpt,
   };
 }
 
@@ -29,6 +30,45 @@ export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) notFound();
+
+  // Locked post — show countdown
+  if ("locked" in post) {
+    return (
+      <main className="min-h-screen pt-28 pb-24 px-6 flex flex-col items-center justify-center relative">
+        <div className="max-w-3xl w-full mx-auto flex flex-col items-center gap-10 text-center">
+          <Link
+            href="/blog"
+            className="self-start inline-flex items-center gap-2 terminal text-xs text-slate-500 hover:text-cyan-400 transition-colors tracking-widest uppercase"
+          >
+            ← Back to blog
+          </Link>
+
+          <div className="flex flex-wrap justify-center gap-2">
+            {post.tags.map(t => (
+              <span
+                key={t}
+                className="terminal text-xs px-2 py-1 rounded-sm border border-cyan-400/20 text-cyan-400"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+
+          <h1 className="font-display font-black text-[clamp(1.6rem,4vw,3rem)] text-white leading-tight">
+            {post.title}
+          </h1>
+
+          <div className="w-full h-px bg-cyan-400/10" />
+
+          <p className="terminal text-xs text-slate-500 tracking-widest uppercase">
+            This post is locked. Check back in…
+          </p>
+
+          <PostCountdown lockedUntil={post.lockedUntil} />
+        </div>
+      </main>
+    );
+  }
 
   // Convert markdown → HTML
   const processed = await remark().use(remarkGfm).use(remarkHtml, { allowDangerousHtml: true }).process(post.content);
