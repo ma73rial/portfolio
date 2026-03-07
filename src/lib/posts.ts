@@ -12,6 +12,7 @@ export interface PostMeta {
   tags:        string[];
   readingTime: number;
   cover?:      string;
+  lockedUntil?: string;
 }
 
 export interface Post extends PostMeta {
@@ -26,20 +27,25 @@ function estimateReadingTime(text: string): number {
 export async function getAllPosts(): Promise<PostMeta[]> {
   const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith(".md"));
 
-  const posts = files.map(file => {
-    const raw  = fs.readFileSync(path.join(POSTS_DIR, file), "utf8");
-    const { data, content } = matter(raw);
-    const slug = file.replace(/\.md$/, "");
-    return {
-      slug,
-      title:       data.title       ?? "Untitled",
-      date:        data.date        ?? "",
-      excerpt:     data.excerpt     ?? content.slice(0, 160).replace(/\n/g, " ") + "…",
-      tags:        data.tags        ?? [],
-      readingTime: estimateReadingTime(content),
-      cover:       data.cover,
-    } as PostMeta;
-  });
+  const now = new Date();
+
+  const posts = files
+    .map(file => {
+      const raw  = fs.readFileSync(path.join(POSTS_DIR, file), "utf8");
+      const { data, content } = matter(raw);
+      const slug = file.replace(/\.md$/, "");
+      return {
+        slug,
+        title:       data.title       ?? "Untitled",
+        date:        data.date        ?? "",
+        excerpt:     data.excerpt     ?? content.slice(0, 160).replace(/\n/g, " ") + "…",
+        tags:        data.tags        ?? [],
+        readingTime: estimateReadingTime(content),
+        cover:       data.cover,
+        lockedUntil: data.locked_until,
+      } as PostMeta;
+    })
+    .filter(post => !post.lockedUntil || new Date(post.lockedUntil) <= now);
 
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
@@ -51,6 +57,9 @@ export async function getPost(slug: string): Promise<Post | null> {
   const raw = fs.readFileSync(filePath, "utf8");
   const { data, content } = matter(raw);
 
+  const lockedUntil = data.locked_until;
+  if (lockedUntil && new Date(lockedUntil) > new Date()) return null;
+
   return {
     slug,
     title:       data.title       ?? "Untitled",
@@ -59,6 +68,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     tags:        data.tags        ?? [],
     readingTime: estimateReadingTime(content),
     cover:       data.cover,
+    lockedUntil,
     content,
   };
 }
