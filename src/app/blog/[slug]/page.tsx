@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link          from "next/link";
-import { getPost, getAllPosts } from "@/lib/posts";
+import { getPost, getAllPostSlugs } from "@/lib/posts";
 import { remark }   from "remark";
 import remarkHtml   from "remark-html";
 import remarkGfm    from "remark-gfm";
@@ -12,8 +12,8 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map(p => ({ slug: p.slug }));
+  const slugs = await getAllPostSlugs();
+  return slugs.map(slug => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props) {

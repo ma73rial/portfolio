@@ -58,6 +58,12 @@ export async function getAllPosts(): Promise<PostMeta[]> {
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+export async function getAllPostSlugs(): Promise<string[]> {
+  return fs.readdirSync(POSTS_DIR)
+    .filter(f => f.endsWith(".md"))
+    .map(f => f.replace(/\.md$/, ""));
+}
+
 export async function getPost(slug: string): Promise<Post | LockedPost | null> {
   const filePath = path.join(POSTS_DIR, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
