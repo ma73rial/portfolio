@@ -126,8 +126,8 @@ export default function Contact() {
               </button>
               <p className="terminal text-xs text-slate-500">
                 Or email directly:{" "}
-                <a href="mailto:mpez6366@student.dodea.edu" className="text-cyan-400 hover:underline">
-                  mpez6366@student.dodea.edu
+                <a href="mailto:hello@junipervirtual.org" className="text-cyan-400 hover:underline">
+                  hello@junipervirtual.org
                 </a>
               </p>
             </div>
