@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Cursor from "@/components/Cursor";
+import EasterEgg from "@/components/EasterEgg";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -53,6 +54,8 @@ export default function RootLayout({
         <Nav />
         {/* Page content */}
         {children}
+        {/* Secret: type "juniper" anywhere */}
+        <EasterEgg />
       </body>
     </html>
   );
